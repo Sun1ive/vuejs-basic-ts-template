@@ -14,7 +14,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  array: string[] = ['hello', 'world', 'my', 'list', 'new array item'];
+  array: string[] = ['hello', 'world', 'my', 'new array item'];
 }
 </script>
 
