@@ -3,12 +3,15 @@ const { VueLoaderPlugin } = require('vue-loader');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HTML = require('html-webpack-plugin');
 
+const loaders = require('./loaders');
+
 const isProd = process.env.NODE_ENV === 'production';
 
 const resolve = file => path.resolve(__dirname, file);
 
 module.exports = {
   mode: isProd ? 'production' : 'development',
+  devtool: isProd ? false : '#eval-source-map',
   entry: {
     app: resolve('../src/main.ts')
   },
@@ -18,30 +21,7 @@ module.exports = {
     filename: '[name].js'
   },
   module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          compilerOptions: {
-            preserveWhitespace: false
-          }
-        }
-      },
-      {
-        test: /\.tsx?$/,
-        loader: 'ts-loader',
-        exclude: /node_modules/,
-        options: {
-          transpileOnly: true,
-          appendTsSuffixTo: [/\.vue$/]
-        }
-      },
-      {
-        test: /css$/,
-        loader: 'css-loader'
-      }
-    ]
+    rules: [loaders.vueLoader(), loaders.tsLoader(), loaders.cssLoader()]
   },
   resolve: {
     extensions: ['.js', '.vue', '.scss', '.css', '.ts', '.tsx'],
@@ -53,7 +33,6 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: isProd ? false : '#eval-source-map',
   plugins: [
     new VueLoaderPlugin(),
     new HTML({
